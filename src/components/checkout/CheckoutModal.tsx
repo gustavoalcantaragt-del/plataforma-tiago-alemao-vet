@@ -43,9 +43,6 @@ function validateCPF(cpf: string): boolean {
 
 export function CheckoutModal({ course, productId, onClose, onSuccess }: CheckoutModalProps) {
   const { user } = useAuth()
-
-  // Segurança: se pagamentos desativados, nunca renderiza o modal
-  if (!PAYMENTS_ENABLED) return null
   const [step, setStep] = useState<Step>('form')
   const [method, setMethod] = useState<Method>('PIX')
   const [cpf, setCpf] = useState('')
@@ -54,6 +51,8 @@ export function CheckoutModal({ course, productId, onClose, onSuccess }: Checkou
   const [pixData, setPixData] = useState<{ qrCode: string; copiaECola: string } | null>(null)
   const [checkoutUrl, setCheckoutUrl] = useState('')
   const [copied, setCopied] = useState(false)
+
+  if (!PAYMENTS_ENABLED) return null
 
   const discount = course.price_old
     ? Math.round((1 - course.price / course.price_old) * 100)
