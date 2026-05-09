@@ -1,6 +1,8 @@
 import { useState, useEffect } from 'react'
 import { useAuth } from '../contexts/AuthContext'
 import { supabase } from '../lib/supabase'
+import { USE_MOCK_DATA } from '../lib/features'
+import { MOCK_COURSES } from '../data/mock'
 
 export function useUserAccess(productId: string) {
   const { user } = useAuth()
@@ -9,8 +11,14 @@ export function useUserAccess(productId: string) {
 
   useEffect(() => {
     async function load() {
-      if (!user || !supabase || !productId) {
+      if (!user || !productId) {
         setHasAccess(false)
+        setLoading(false)
+        return
+      }
+      if (!supabase) {
+        // Modo demo: libera acesso a todos os produtos
+        setHasAccess(USE_MOCK_DATA)
         setLoading(false)
         return
       }
@@ -46,8 +54,14 @@ export function useAllUserAccess() {
 
   useEffect(() => {
     async function load() {
-      if (!user || !supabase) {
+      if (!user) {
         setAccessIds([])
+        setLoading(false)
+        return
+      }
+      if (!supabase) {
+        // Modo demo: todos os cursos acessíveis
+        setAccessIds(USE_MOCK_DATA ? MOCK_COURSES.map(c => c.id) : [])
         setLoading(false)
         return
       }

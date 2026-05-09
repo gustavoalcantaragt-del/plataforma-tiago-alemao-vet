@@ -11,6 +11,8 @@ import { ConfirmModal } from '../../components/ui/ConfirmModal'
 import { SkeletonList } from '../../components/ui/Skeleton'
 import { formatBRL } from '../../lib/asa'
 import { supabase } from '../../lib/supabase'
+import { USE_MOCK_DATA } from '../../lib/features'
+import { MOCK_PRODUCTS } from '../../data/mock'
 import type { Product, ProductType, AccessType } from '../../types'
 
 
@@ -142,6 +144,8 @@ export function OwnerProducts() {
             .order('created_at', { ascending: false })
           if (error) throw error
           setProducts((data as Product[]) ?? [])
+        } else if (USE_MOCK_DATA) {
+          setProducts(MOCK_PRODUCTS)
         }
       } catch (err) {
         console.error('[OwnerProducts]', err)

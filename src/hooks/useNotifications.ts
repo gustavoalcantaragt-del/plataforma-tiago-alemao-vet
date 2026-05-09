@@ -1,6 +1,8 @@
 import { useState, useEffect, useCallback } from 'react'
 import { supabase } from '../lib/supabase'
 import { useAuth } from '../contexts/AuthContext'
+import { MOCK_NOTIFICATIONS } from '../data/mock'
+import { USE_MOCK_DATA } from '../lib/features'
 
 export type NotificationType = 'achievement' | 'course' | 'event' | 'payment' | 'system'
 
@@ -25,7 +27,11 @@ export function useNotifications() {
 
   useEffect(() => {
     if (!user) { setLoading(false); return }
-    if (!supabase) { setLoading(false); return }
+    if (!supabase) {
+      if (USE_MOCK_DATA) setNotifications(MOCK_NOTIFICATIONS)
+      setLoading(false)
+      return
+    }
 
     // Initial load
     supabase
