@@ -4,6 +4,7 @@
 import { createContext, useContext, useState, useEffect, type ReactNode } from 'react'
 import type { User } from '../types'
 import { supabase } from '../lib/supabase'
+import { MOCK_OWNER } from '../data/mock'
 
 interface AuthContextValue {
   user: User | null
@@ -15,6 +16,8 @@ interface AuthContextValue {
 }
 
 const AuthContext = createContext<AuthContextValue | null>(null)
+
+const MOCK_SESSION_KEY = 'nl_mock_session'
 
 async function fetchProfile(userId: string): Promise<User | null> {
   if (!supabase) return null
@@ -32,12 +35,16 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const [loading, setLoading] = useState(true)
 
   useEffect(() => {
+    // Modo demo: sem Supabase, usa sessão mock persistida no localStorage
     if (!supabase) {
+      const saved = localStorage.getItem(MOCK_SESSION_KEY)
+      if (saved) {
+        try { setUser(JSON.parse(saved)) } catch { /* ignore */ }
+      }
       setLoading(false)
       return
     }
 
-    // Carrega sessão existente
     supabase.auth.getSession().then(async ({ data: { session } }) => {
       if (session?.user) {
         const profile = await fetchProfile(session.user.id)
@@ -46,11 +53,9 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       setLoading(false)
     })
 
-    // Escuta mudanças de auth
     const { data: { subscription } } = supabase.auth.onAuthStateChange(async (_event, session) => {
       if (session?.user) {
         const profile = await fetchProfile(session.user.id)
-        // Só atualiza se encontrou perfil — não força logout se falhar
         if (profile) setUser(profile)
       } else {
         setUser(null)
@@ -62,11 +67,16 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   }, [])
 
   async function login(email: string, password: string) {
-    if (!supabase) return { error: 'Supabase não configurado' }
+    // Modo demo: aceita qualquer credencial e loga como owner
+    if (!supabase) {
+      if (!email || !password) return { error: 'Preencha e-mail e senha.' }
+      const mockUser: User = { ...MOCK_OWNER, email, name: email.split('@')[0] }
+      localStorage.setItem(MOCK_SESSION_KEY, JSON.stringify(mockUser))
+      setUser(mockUser)
+      return {}
+    }
     const { data, error } = await supabase.auth.signInWithPassword({ email, password })
     if (error) return { error: error.message }
-    // Aguarda o perfil ser carregado antes de retornar
-    // para garantir que user != null quando navigate('/dashboard') for chamado
     if (data.user) {
       const profile = await fetchProfile(data.user.id)
       if (profile) setUser(profile)
@@ -75,7 +85,14 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   }
 
   async function signup(name: string, email: string, password: string) {
-    if (!supabase) return { error: 'Supabase não configurado' }
+    // Modo demo: cria sessão mock
+    if (!supabase) {
+      if (!name || !email || !password) return { error: 'Preencha todos os campos.' }
+      const mockUser: User = { ...MOCK_OWNER, email, name, role: 'student' }
+      localStorage.setItem(MOCK_SESSION_KEY, JSON.stringify(mockUser))
+      setUser(mockUser)
+      return {}
+    }
     const { error } = await supabase.auth.signUp({
       email,
       password,
@@ -85,7 +102,11 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   }
 
   async function logout() {
-    if (!supabase) return
+    if (!supabase) {
+      localStorage.removeItem(MOCK_SESSION_KEY)
+      setUser(null)
+      return
+    }
     await supabase.auth.signOut()
     setUser(null)
   }
