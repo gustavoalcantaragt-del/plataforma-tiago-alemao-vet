@@ -1,0 +1,81 @@
+<!doctype html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <!-- Primary Meta -->
+    <title>Tiago Alemão VET — Plataforma de Educação Veterinária</title>
+    <meta name="description" content="A plataforma completa para médicos veterinários, gestores de clínica e donos de pet shop que querem crescer profissionalmente e aumentar a receita do seu negócio." />
+    <meta name="keywords" content="medicina veterinária, gestão clínica veterinária, pet shop, curso veterinário, tiago alemão" />
+    <meta name="author" content="Tiago Alemão" />
+    <meta name="theme-color" content="#E10600" />
+
+    <!-- Open Graph (Facebook, WhatsApp, LinkedIn) -->
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="https://app.tiagoedu.com.br/" />
+    <meta property="og:title" content="Tiago Alemão VET — Plataforma de Educação Veterinária" />
+    <meta property="og:description" content="Cursos, mentorias e comunidade para veterinários e gestores que querem crescer. Aprenda na prática com o Tiago Alemão." />
+    <meta property="og:image" content="https://app.tiagoedu.com.br/og-image.jpg" />
+    <meta property="og:locale" content="pt_BR" />
+    <meta property="og:site_name" content="Tiago Alemão VET" />
+
+    <!-- Twitter Card -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:url" content="https://app.tiagoedu.com.br/" />
+    <meta name="twitter:title" content="Tiago Alemão VET — Plataforma de Educação Veterinária" />
+    <meta name="twitter:description" content="Cursos, mentorias e comunidade para veterinários e gestores que querem crescer." />
+    <meta name="twitter:image" content="https://app.tiagoedu.com.br/og-image.jpg" />
+
+    <!-- PWA / Mobile -->
+    <meta name="mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+    <meta name="apple-mobile-web-app-title" content="Tiago VET" />
+    <link rel="apple-touch-icon" href="/icons/icon-192.png" />
+    <link rel="manifest" href="/manifest.json" />
+
+    <!-- Favicon -->
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@300;400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+
+    <style>
+      *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+      html, body, #root { height: 100%; }
+      body {
+        background: #0B0B0B;
+        color: #FFFFFF;
+        font-family: 'Inter', 'Outfit', sans-serif;
+        -webkit-font-smoothing: antialiased;
+      }
+      ::-webkit-scrollbar { width: 4px; }
+      ::-webkit-scrollbar-track { background: transparent; }
+      ::-webkit-scrollbar-thumb { background: rgba(225,6,0,0.3); border-radius: 2px; }
+      * { scrollbar-width: thin; scrollbar-color: rgba(225,6,0,0.3) transparent; }
+
+      /* Onboarding animation */
+      @keyframes fadeInUp {
+        from { opacity: 0; transform: translateY(24px); }
+        to   { opacity: 1; transform: translateY(0); }
+      }
+
+      /* Mobile bottom bar safe area */
+      @supports (padding-bottom: env(safe-area-inset-bottom)) {
+        .mobile-bottom-bar {
+          padding-bottom: calc(8px + env(safe-area-inset-bottom));
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div id="root"></div>
+    <script type="module" src="/src/main.tsx"></script>
+  </body>
+</html>
